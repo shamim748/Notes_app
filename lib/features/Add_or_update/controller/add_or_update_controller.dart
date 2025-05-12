@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -14,6 +15,11 @@ class AddOrUpdateController extends GetxController {
   final TextEditingController descriptionController = TextEditingController();
   final box = GetStorage();
   final GlobalKey<FormState> updateformKey = GlobalKey<FormState>();
+  var selectedColor = Colors.green.shade200.obs;
+
+  void changeColor(Color color) {
+    selectedColor.value = color;
+  }
 
   RxBool isLoading = false.obs;
   String? userUid;

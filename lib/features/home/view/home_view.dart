@@ -8,6 +8,7 @@ import 'package:note_app/features/Add_or_update/controller/add_or_update_control
 import 'package:note_app/features/home/bindings/home_controller_bindings.dart';
 import 'package:note_app/features/home/controller/home_controller.dart';
 import 'package:note_app/features/home/model/note_model.dart';
+import 'package:note_app/widgets/note_card.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -25,7 +26,8 @@ class HomeView extends StatelessWidget {
         onPressed: () {
           addOrUpdateController.titleController.clear();
           addOrUpdateController.descriptionController.clear();
-          context.push("/update", extra: {"isUpdate": false});
+
+          context.push("/update", extra: {"title": null, "description": null});
         },
         label: Text("Add new note"),
       ),
@@ -41,44 +43,62 @@ class HomeView extends StatelessWidget {
             itemCount: controller.notes.length,
             itemBuilder: (context, index) {
               NoteModel note = controller.notes[index];
-              return ListTile(
-                trailing: SizedBox(
-                  width: 100,
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          addOrUpdateController.titleController.text =
-                              note.title;
-                          addOrUpdateController.descriptionController.text =
-                              note.description;
-                          context.push(
-                            "/update",
-                            extra: {"isUpdate": true, "id": note.id},
-                          );
-                        },
-                        icon: const Icon(Icons.edit),
-                      ),
-                      IconButton(
-                        onPressed: () async {
-                          bool success = await addOrUpdateController.deleteNote(
-                            context: context,
-                            noteId: note.id!,
-                          );
-                          if (success) {
-                            controller.notes.removeWhere(
-                              (n) => n.id == note.id,
-                            );
-                          }
-                        },
-                        icon: const Icon(Icons.delete),
-                      ),
-                    ],
-                  ),
+              return GestureDetector(
+                onTap: () {
+                  context.push(
+                    "/update",
+                    extra: {
+                      "title": note.title,
+                      "description": note.description,
+                    },
+                  );
+                },
+                child: NoteCard(
+                  title: note.title,
+                  description: note.description,
+                  date: note.createdAt,
+                  isPinned: note.isPinned ?? false,
+                  onPinTap: () {},
                 ),
-                title: Text(note.title),
-                subtitle: Text(note.description),
               );
+              // return ListTile(
+              //   trailing: SizedBox(
+              //     width: 100,
+              //     child: Row(
+              //       children: [
+              //         IconButton(
+              //           onPressed: () {
+              //             addOrUpdateController.titleController.text =
+              //                 note.title;
+              //             addOrUpdateController.descriptionController.text =
+              //                 note.description;
+              //             context.push(
+              //               "/update",
+              //               extra: {"isUpdate": true, "id": note.id},
+              //             );
+              //           },
+              //           icon: const Icon(Icons.edit),
+              //         ),
+              //         IconButton(
+              //           onPressed: () async {
+              //             bool success = await addOrUpdateController.deleteNote(
+              //               context: context,
+              //               noteId: note.id!,
+              //             );
+              //             if (success) {
+              //               controller.notes.removeWhere(
+              //                 (n) => n.id == note.id,
+              //               );
+              //             }
+              //           },
+              //           icon: const Icon(Icons.delete),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              //   title: Text(note.title),
+              //   subtitle: Text(note.description),
+              // );
             },
           );
         }
