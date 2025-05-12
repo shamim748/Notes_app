@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:note_app/features/Add_or_update/view/add_or_update_view.dart';
+import 'package:note_app/features/home/model/note_model.dart';
 import 'package:note_app/features/home/view/home_view.dart';
 import 'package:note_app/features/sign_up/view/sign_up_view.dart';
 import 'package:note_app/features/signin/view/sign_in_view.dart';
@@ -12,18 +13,12 @@ final GoRouter appRouter = GoRouter(
     GoRoute(path: '/signin', builder: (context, state) => const SignInView()),
     GoRoute(path: '/signup', builder: (context, state) => const SignUpView()),
     GoRoute(path: '/home', builder: (context, state) => const HomeView()),
-    // GoRoute(
-    //   path: '/update',
-    //   builder: (context, state) {
-    //     final data = state.extra as Map<String, dynamic>;
-    //     return AddOrUpdateView(isUpdate: data["isUpdate"], noteId: data["id"]);
-    //   },
-    // ),
+
     GoRoute(
       path: '/update',
       builder: (context, state) {
-        final data = state.extra as Map<String, dynamic>;
-        return AddOrUpdateView(data: data);
+        NoteModel noteModel = state.extra as NoteModel;
+        return AddOrUpdateView(noteModel: noteModel);
       },
     ),
   ],
