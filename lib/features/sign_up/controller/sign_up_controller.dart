@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'package:get/state_manager.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:go_router/go_router.dart';
 import 'package:note_app/constants/app_text.dart';
 import 'package:note_app/core/model/user_model.dart';
 import 'package:note_app/helpers/custom_snackbar.dart';
@@ -14,18 +13,24 @@ class SignUpController extends GetxController {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passController = TextEditingController();
+  final TextEditingController confirmPassController = TextEditingController();
   final GlobalKey<FormState> signUpFormKey = GlobalKey<FormState>();
   RxBool isloading = false.obs;
+  RxBool obscureTextPassword = true.obs;
+  RxBool obscureTextConfirmPassword = true.obs;
   FirebaseServices firebaseServices = FirebaseServices();
 
   @override
   void dispose() {
     emailController.dispose();
     passController.dispose();
+    nameController.dispose();
+    confirmPassController.dispose();
     super.dispose();
   }
 
   Future<User?> signUp({
+    required BuildContext context,
     required String name,
     required String emailAddress,
     required String password,
@@ -44,21 +49,39 @@ class SignUpController extends GetxController {
           name: user.displayName ?? name,
           uid: user.uid,
         );
-        await firebaseServices.createUser(
-          userId: user.uid,
-          userData: userModel.toJson(),
-        );
+        if (context.mounted) {
+          await firebaseServices.createUser(
+            context: context,
+            userId: user.uid,
+            userData: userModel.toJson(),
+          );
+        }
         box.write(AppText.userUid, credential.user!.uid);
         return credential.user;
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        CustomSnackbar().failedSnackBar(message: e.toString());
+        if (context.mounted) {
+          CustomSnackbar().failedSnackBar(
+            context: context,
+            message: e.toString(),
+          );
+        }
       } else if (e.code == 'email-already-in-use') {
-        CustomSnackbar().failedSnackBar(message: e.toString());
+        if (context.mounted) {
+          CustomSnackbar().failedSnackBar(
+            context: context,
+            message: e.toString(),
+          );
+        }
       }
     } catch (e) {
-      CustomSnackbar().failedSnackBar(message: e.toString());
+      if (context.mounted) {
+        CustomSnackbar().failedSnackBar(
+          context: context,
+          message: e.toString(),
+        );
+      }
     }
     isloading.value = false;
     return null;
