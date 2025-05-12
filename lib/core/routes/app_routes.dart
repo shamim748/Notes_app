@@ -14,7 +14,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(path: '/home', builder: (context, state) => const HomeView()),
     GoRoute(
       path: '/update',
-      builder: (context, state) => const AddOrUpdateView(),
+      builder: (context, state) {
+        final data = state.extra as Map<String, dynamic>;
+        return AddOrUpdateView(isUpdate: data["isUpdate"], noteId: data["id"]);
+      },
     ),
   ],
 );

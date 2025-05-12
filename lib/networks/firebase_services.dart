@@ -10,7 +10,8 @@ class FirebaseServices {
     try {
       await _firestore.collection('users').doc(userId).set(userData);
     } catch (e) {
-      CustomSnackbar.error(title: "Error ", message: e.toString());
+      CustomSnackbar().failedSnackBar(message: e.toString());
+      ;
     }
   }
 }

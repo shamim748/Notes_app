@@ -11,7 +11,7 @@ class SignInController extends GetxController {
   final box = GetStorage();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passController = TextEditingController();
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> signInFormKey = GlobalKey<FormState>();
   RxBool isloading = false.obs;
   UserModel? userModel;
   @override
@@ -39,26 +39,14 @@ class SignInController extends GetxController {
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        CustomSnackbar.error(
-          title: "Error",
-          message: "No user found for that email.",
-        );
+        CustomSnackbar().failedSnackBar(message: e.toString());
       } else if (e.code == 'wrong-password') {
-        CustomSnackbar.error(
-          title: "Error",
-          message: "Incorrect password. Please try again.",
-        );
+        CustomSnackbar().failedSnackBar(message: e.toString());
       } else {
-        CustomSnackbar.error(
-          title: "Error",
-          message: e.message ?? "Authentication error occurred.",
-        );
+        CustomSnackbar().failedSnackBar(message: e.toString());
       }
     } catch (e) {
-      CustomSnackbar.error(
-        title: "Error",
-        message: "Something went wrong. Please try again.",
-      );
+      CustomSnackbar().failedSnackBar(message: e.toString());
     } finally {
       isloading.value = false;
     }

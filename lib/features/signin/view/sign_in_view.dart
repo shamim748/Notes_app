@@ -28,7 +28,7 @@ class SignInView extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Form(
-          key: controller.formKey,
+          key: controller.signInFormKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -81,7 +81,8 @@ class SignInView extends StatelessWidget {
                         : CustomElevatedButton(
                           text: "Sign in",
                           onPressed: () async {
-                            if (controller.formKey.currentState!.validate()) {
+                            if (controller.signInFormKey.currentState!
+                                .validate()) {
                               User? user = await controller.signIn(
                                 emailAddress: controller.emailController.text,
                                 password: controller.passController.text,
@@ -89,9 +90,8 @@ class SignInView extends StatelessWidget {
                               if (user != null && context.mounted) {
                                 context.go("/home");
                               } else {
-                                CustomSnackbar.error(
-                                  title: "Failed",
-                                  message: "Sign in faild , try again",
+                                CustomSnackbar().failedSnackBar(
+                                  message: "Failed try again",
                                 );
                               }
                             } else {

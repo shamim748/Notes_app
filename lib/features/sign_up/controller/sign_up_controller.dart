@@ -14,7 +14,7 @@ class SignUpController extends GetxController {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passController = TextEditingController();
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> signUpFormKey = GlobalKey<FormState>();
   RxBool isloading = false.obs;
   FirebaseServices firebaseServices = FirebaseServices();
 
@@ -53,21 +53,12 @@ class SignUpController extends GetxController {
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        CustomSnackbar.error(
-          title: "Error",
-          message: "The password provided is too weak",
-        );
+        CustomSnackbar().failedSnackBar(message: e.toString());
       } else if (e.code == 'email-already-in-use') {
-        CustomSnackbar.error(
-          title: "Error",
-          message: "The account already exists for that email.",
-        );
+        CustomSnackbar().failedSnackBar(message: e.toString());
       }
     } catch (e) {
-      CustomSnackbar.error(
-        title: "Error",
-        message: "Something went wrong. Please try again.",
-      );
+      CustomSnackbar().failedSnackBar(message: e.toString());
     }
     isloading.value = false;
     return null;
