@@ -92,9 +92,10 @@ class NoteCard extends StatelessWidget {
   final bool isPinned;
   final VoidCallback onPinTap;
   final VoidCallback? onTap;
-
-  const NoteCard({
+  Color? bgColor;
+  NoteCard({
     super.key,
+    this.bgColor,
     required this.title,
     required this.description,
     required this.date,
@@ -105,7 +106,6 @@ class NoteCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Convert Timestamp to readable date
     final String formattedDate = DateFormat(
       'MMMM d, yyyy',
     ).format(date.toDate());
@@ -113,7 +113,7 @@ class NoteCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        color: Colors.white,
+        color: bgColor ?? Colors.white,
         elevation: 2,
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         shape: RoundedRectangleBorder(
@@ -124,7 +124,6 @@ class NoteCard extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Stack(
             children: [
-              // Title, Description, and Date
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
