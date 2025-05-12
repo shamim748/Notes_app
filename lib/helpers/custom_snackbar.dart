@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class CustomSnackbar {
-  successSnackBar({required String message}) {
-    return Get.showSnackbar(
-      GetSnackBar(
-        title: "Success",
-        message: message,
+  void successSnackBar({
+    required String message,
+    required BuildContext context,
+  }) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
         backgroundColor: Colors.green,
         duration: const Duration(seconds: 2),
       ),
     );
   }
 
-  failedSnackBar({required String message}) {
-    return Get.showSnackbar(
-      GetSnackBar(
-        title: "Failed",
-        message: message,
+  void failedSnackBar({
+    required String message,
+    required BuildContext context,
+  }) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
         backgroundColor: Colors.redAccent,
         duration: const Duration(seconds: 2),
       ),
